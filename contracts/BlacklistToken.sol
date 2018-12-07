@@ -21,12 +21,16 @@ contract BlacklistToken {
         uint len = bannedPairs.length;
         if (len % 2 != 0) {
             // In production code, this would be done with a `require` statement,
-            // but events are better for testing
+            // but it's done with an event in order to test the constructor.
+            // Of course this would not work in production
+            // because the contract is created anyway.
             emit CreationError(ERR_BAD_BANNED_PAIRS);
             return;
         }
 
         if (len > 0) {
+            // Create blacklists.
+            // len > 0 is checked to prevent integer underflow in loop condition.
             for (uint i = 0; i < len - 1; ++i) {
                 addToBlacklist(bannedPairs[i], bannedPairs[i+1]);
                 addToBlacklist(bannedPairs[i+1], bannedPairs[i]);
