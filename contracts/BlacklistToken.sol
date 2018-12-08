@@ -24,7 +24,7 @@ contract BlacklistToken {
             return;
         }
 
-        for (uint i = 0; i < len; ++i) {
+        for (uint i = 0; i < len/2; ++i) {
             addToBlacklist(bannedPairs[2*i], bannedPairs[2*i + 1]);
             addToBlacklist(bannedPairs[2*i + 1], bannedPairs[2*i]);
         }
