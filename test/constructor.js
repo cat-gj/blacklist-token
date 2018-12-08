@@ -116,4 +116,28 @@ contract("BlacklistToken constructor", (accounts) => {
             utils.compareBlacklists(expected, actual, "0x7");
         })
     })
+
+    describe("Repeated edges in list of pairs", () => {
+        let pairs = [["0x1", "0x2"], ["0x2", "0x1"]];
+        let flattenedPairs = utils.flattenPairs(pairs);
+
+        it ("Contract creation successful", async () => {
+            blacklistToken = await BlacklistToken.new(flattenedPairs);
+            let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
+            let errorCode = receipt.logs[0].data;
+
+            assert.equal(parseInt(errorCode, 16), 0x0,
+            "Expected SUCCESS");
+        })
+
+        it("Blacklists created", async () => {
+            let blacklist1Expected = [utils.padAddr("0x2")];
+            let blacklist2Expected = [utils.padAddr("0x1")];
+            let blacklist1Actual = await blacklistToken.getBlacklist("0x1");
+            let blacklist2Actual = await blacklistToken.getBlacklist("0x2");
+
+            utils.compareBlacklists(blacklist1Expected, blacklist1Actual, "0x1");
+            utils.compareBlacklists(blacklist2Expected, blacklist2Actual, "0x2");
+        })
+    })
 })
