@@ -15,6 +15,7 @@ contract BlacklistToken {
 
     constructor(address[] bannedPairs) public {
         uint len = bannedPairs.length;
+
         if (len % 2 != 0) {
             // In production code, this would be done with a `require` statement,
             // but it's done with an event in order to test the constructor.
@@ -34,6 +35,7 @@ contract BlacklistToken {
 
     function addToBlacklist(address blacklistHolder, address toAdd) private {
         address[] storage blacklist = _blacklists[blacklistHolder];
+
         if (!contains(blacklist, toAdd)) {
             blacklist.push(toAdd);
         }
