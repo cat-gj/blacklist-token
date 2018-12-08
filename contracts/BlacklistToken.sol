@@ -4,18 +4,14 @@ import "./IERC20.sol";
 
 contract BlacklistToken {
 
-    // Error codes
+    // Error codes, mostly for testing
+    uint constant SUCCESS = 0x0;
     uint constant ERR_BAD_BANNED_PAIRS = 0x100;
 
     // Events
-    event CreationError(uint err);
+    event BlacklistTokenCreation(uint err);
 
-    struct BlacklistInfo {
-        bool defined;
-        address[] blacklist;
-    }
-
-    mapping (address => BlacklistInfo) private _blacklists;
+    mapping (address => address[]) private _blacklists;
 
     constructor(address[] bannedPairs) public {
         uint len = bannedPairs.length;
@@ -24,7 +20,7 @@ contract BlacklistToken {
             // but it's done with an event in order to test the constructor.
             // Of course this would not work in production
             // because the contract is created anyway.
-            emit CreationError(ERR_BAD_BANNED_PAIRS);
+            emit BlacklistTokenCreation(ERR_BAD_BANNED_PAIRS);
             return;
         }
 
@@ -32,18 +28,15 @@ contract BlacklistToken {
             addToBlacklist(bannedPairs[2*i], bannedPairs[2*i + 1]);
             addToBlacklist(bannedPairs[2*i + 1], bannedPairs[2*i]);
         }
+
+        emit BlacklistTokenCreation(SUCCESS);
     }
 
     function addToBlacklist(address blacklistHolder, address toAdd) private {
-        BlacklistInfo storage blacklistInfo = _blacklists[blacklistHolder];
-        blacklistInfo.blacklist.push(toAdd);
+        _blacklists[blacklistHolder].push(toAdd);
     }
 
     function getBlacklist(address who) public view returns (address[]) {
-        return _blacklists[who].blacklist;
-    }
-
-    function hasBlacklist(address who) public view returns (bool) {
-        return _blacklists[who].defined;
+        return _blacklists[who];
     }
 }
