@@ -4,6 +4,9 @@ import "./IERC20.sol";
 
 contract BlacklistToken {
 
+    // Private variables
+    uint private supply = 1000000; // fixed supply for simplicity
+
     // Error codes, mostly for testing
     uint constant SUCCESS = 0x0;
     uint constant ERR_BAD_BANNED_PAIRS = 0x100;
@@ -33,6 +36,10 @@ contract BlacklistToken {
         }
 
         emit BlacklistTokenCreation(SUCCESS);
+    }
+
+    function totalSupply() external view returns (uint256) {
+        return supply;
     }
 
     function balanceOf(address _who) external view returns (uint) {

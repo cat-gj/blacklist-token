@@ -17,6 +17,14 @@ contract("BlacklistToken constructor", (accounts) => {
 
             utils.compareBlacklists(expected, actual, "0x1");
         })
+
+        it("Total supply", async () => {
+            let expected = 1000000;
+            let actual = await blacklistToken.totalSupply();
+
+            assert.equal(expected, actual,
+            "Expected actual supply ${actual} to equal ${expected}");
+        })
     })
 
     describe("Odd list length", () => {
