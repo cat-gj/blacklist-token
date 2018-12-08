@@ -28,13 +28,9 @@ contract BlacklistToken {
             return;
         }
 
-        if (len > 0) {
-            // Create blacklists.
-            // len > 0 is checked to prevent integer underflow in loop condition.
-            for (uint i = 0; i < len - 1; ++i) {
-                addToBlacklist(bannedPairs[i], bannedPairs[i+1]);
-                addToBlacklist(bannedPairs[i+1], bannedPairs[i]);
-            }
+        for (uint i = 0; i < len; ++i) {
+            addToBlacklist(bannedPairs[2*i], bannedPairs[2*i + 1]);
+            addToBlacklist(bannedPairs[2*i + 1], bannedPairs[2*i]);
         }
     }
 
