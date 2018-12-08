@@ -33,10 +33,25 @@ contract BlacklistToken {
     }
 
     function addToBlacklist(address blacklistHolder, address toAdd) private {
-        _blacklists[blacklistHolder].push(toAdd);
+        address[] storage blacklist = _blacklists[blacklistHolder];
+        if (!contains(blacklist, toAdd)) {
+            blacklist.push(toAdd);
+        }
     }
 
     function getBlacklist(address who) public view returns (address[]) {
         return _blacklists[who];
+    }
+
+    function contains(address[] blacklist, address element) private pure returns (bool) {
+        uint len = blacklist.length;
+
+        for (uint i = 0; i < len; ++i) {
+            if (blacklist[i] == element) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
