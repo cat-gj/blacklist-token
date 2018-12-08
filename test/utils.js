@@ -18,5 +18,9 @@ module.exports = {
     padAddr: function(addr) {
         let nZeros = 40 - (addr.length - 2);
         return ("0x" + "0".repeat(nZeros) + addr.slice(2, addr.length));
+    },
+
+    flattenPairs: function(pairs) {
+        return [].concat.apply([], pairs);
     }
 };
