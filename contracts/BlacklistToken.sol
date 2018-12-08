@@ -11,10 +11,12 @@ contract BlacklistToken {
     // Events
     event BlacklistTokenCreation(uint err);
 
-    mapping (address => address[]) private _blacklists;
+    // Private mappings
+    mapping (address => address[]) private blacklists;
+    mapping (address => uint) balances;
 
-    constructor(address[] bannedPairs) public {
-        uint len = bannedPairs.length;
+    constructor(address[] _bannedPairs) public {
+        uint len = _bannedPairs.length;
 
         if (len % 2 != 0) {
             // In production code, this would be done with a `require` statement,
@@ -26,30 +28,34 @@ contract BlacklistToken {
         }
 
         for (uint i = 0; i < len/2; ++i) {
-            addToBlacklist(bannedPairs[2*i], bannedPairs[2*i + 1]);
-            addToBlacklist(bannedPairs[2*i + 1], bannedPairs[2*i]);
+            addToBlacklist(_bannedPairs[2*i], _bannedPairs[2*i + 1]);
+            addToBlacklist(_bannedPairs[2*i + 1], _bannedPairs[2*i]);
         }
 
         emit BlacklistTokenCreation(SUCCESS);
     }
 
-    function addToBlacklist(address blacklistHolder, address toAdd) private {
-        address[] storage blacklist = _blacklists[blacklistHolder];
+    function balanceOf(address _who) external view returns (uint) {
+        return balances[_who];
+    }
 
-        if (!contains(blacklist, toAdd)) {
-            blacklist.push(toAdd);
+    function addToBlacklist(address _blacklistHolder, address _toAdd) private {
+        address[] storage blacklist = blacklists[_blacklistHolder];
+
+        if (!contains(blacklist, _toAdd)) {
+            blacklist.push(_toAdd);
         }
     }
 
-    function getBlacklist(address who) public view returns (address[]) {
-        return _blacklists[who];
+    function getBlacklist(address _who) public view returns (address[]) {
+        return blacklists[_who];
     }
 
-    function contains(address[] blacklist, address element) private pure returns (bool) {
-        uint len = blacklist.length;
+    function contains(address[] _blacklist, address _element) private pure returns (bool) {
+        uint len = _blacklist.length;
 
         for (uint i = 0; i < len; ++i) {
-            if (blacklist[i] == element) {
+            if (_blacklist[i] == _element) {
                 return true;
             }
         }
