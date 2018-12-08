@@ -10,10 +10,10 @@ contract("BlacklistToken constructor", (accounts) => {
             blacklistToken = await BlacklistToken.new(emptyList);
         })
 
-        it("hasBlacklist returns false for some address", async () => {
-            let defined = await blacklistToken.hasBlacklist("0x1");
-            assert.equal(defined, false,
-                "Blacklist should not be defined since list of banned pairs was empty");
+        it("Blacklist is empty for some address", async () => {
+            let blacklist = await blacklistToken.getBlacklist("0x1");
+            assert.equal(blacklist.length, 0,
+                "Blacklist should be empty since list of banned pairs was empty");
         })
     })
 
