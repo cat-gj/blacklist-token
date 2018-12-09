@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "./IERC20.sol";
 
-contract BlacklistToken {
+contract BlacklistToken is IERC20 {
 
     // Private variables
     uint private supply = 1000000; // fixed supply for simplicity
@@ -10,6 +10,8 @@ contract BlacklistToken {
     // Error codes, mostly for testing
     uint constant SUCCESS = 0x0;
     uint constant ERR_BAD_BANNED_PAIRS = 0x100;
+
+    uint constant DUMMY = 0xdeadbeef;
 
     // Events
     event BlacklistTokenCreation(uint err);
@@ -44,6 +46,26 @@ contract BlacklistToken {
 
     function balanceOf(address _who) external view returns (uint) {
         return balances[_who];
+    }
+
+    // TODO
+    function allowance(address _owner, address _spender) external view returns (uint256) {
+        return DUMMY;
+    }
+
+    // TODO
+    function transfer(address _to, uint256 _value) external returns (bool) {
+        return true;
+    }
+
+    // TODO
+    function approve(address _spender, uint256 _value) external returns (bool) {
+        return true;
+    }
+
+    // TODO
+    function transferFrom(address _from, address _to, uint256 _value) external returns (bool) {
+        return true;
     }
 
     function addToBlacklist(address _blacklistHolder, address _toAdd) private {
