@@ -2,8 +2,9 @@ pragma solidity ^0.4.24;
 
 import {SafeMath} from "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./IERC20.sol";
+import "./ErrorCodes.sol";
 
-contract BlacklistToken is IERC20 {
+contract BlacklistToken is IERC20, ErrorCodes {
 
     using SafeMath for uint;
 
@@ -15,12 +16,6 @@ contract BlacklistToken is IERC20 {
     mapping (address => address[]) private blacklists;
     mapping (address => uint) private balances;
     mapping (address => mapping (address => uint)) allowances;
-
-    // Error codes, mostly for testing
-    uint constant SUCCESS = 0x0;
-    uint constant ERR_BAD_BANNED_PAIRS = 0x100;
-
-    uint constant DUMMY = 0xdeadbeef;
 
     // Events
     event BlacklistTokenCreation(uint err);

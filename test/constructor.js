@@ -1,5 +1,5 @@
 const utils = require("./utils");
-const BlacklistToken = artifacts.require("BlacklistToken");
+const BlacklistTokenForTests = artifacts.require("BlacklistTokenForTests");
 
 contract("BlacklistToken constructor", (accounts) => {
     let blacklistToken;
@@ -8,7 +8,7 @@ contract("BlacklistToken constructor", (accounts) => {
         let emptyList = [];
 
         before(async () => {
-            blacklistToken = await BlacklistToken.new(emptyList);
+            blacklistToken = await BlacklistTokenForTests.new(emptyList);
         })
 
         it("Blacklist is empty for some address", async () => {
@@ -31,7 +31,7 @@ contract("BlacklistToken constructor", (accounts) => {
         let oddLengthList = ["0x1"];
 
         it("Creation fails", async () => {
-            blacklistToken = await BlacklistToken.new(oddLengthList);
+            blacklistToken = await BlacklistTokenForTests.new(oddLengthList);
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
@@ -44,7 +44,7 @@ contract("BlacklistToken constructor", (accounts) => {
         let singlePairList = ["0x1", "0x2"];
 
         it ("Contract creation successful", async () => {
-            blacklistToken = await BlacklistToken.new(singlePairList);
+            blacklistToken = await BlacklistTokenForTests.new(singlePairList);
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
@@ -81,7 +81,7 @@ contract("BlacklistToken constructor", (accounts) => {
         let flattenedPairs = utils.flattenPairs(pairs);
 
         it ("Contract creation successful", async () => {
-            blacklistToken = await BlacklistToken.new(flattenedPairs);
+            blacklistToken = await BlacklistTokenForTests.new(flattenedPairs);
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
@@ -130,7 +130,7 @@ contract("BlacklistToken constructor", (accounts) => {
         let flattenedPairs = utils.flattenPairs(pairs);
 
         it ("Contract creation successful", async () => {
-            blacklistToken = await BlacklistToken.new(flattenedPairs);
+            blacklistToken = await BlacklistTokenForTests.new(flattenedPairs);
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
