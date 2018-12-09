@@ -19,7 +19,7 @@ contract("BlacklistToken constructor", (accounts) => {
         })
 
         it("Total supply", async () => {
-            let expected = 1000000;
+            let expected = 1000;
             let actual = await blacklistToken.totalSupply();
 
             assert.equal(expected, actual,

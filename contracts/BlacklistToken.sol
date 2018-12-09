@@ -8,7 +8,13 @@ contract BlacklistToken is IERC20 {
     using SafeMath for uint;
 
     // Private variables
-    uint private supply = 1000000; // fixed supply for simplicity
+    uint private initialSupply = 1000; // fixed supply for simplicity
+    bool private distributed = false;  // for initial distribution
+
+    // Private mappings
+    mapping (address => address[]) private blacklists;
+    mapping (address => uint) private balances;
+    mapping (address => mapping (address => uint)) allowances;
 
     // Error codes, mostly for testing
     uint constant SUCCESS = 0x0;
@@ -18,10 +24,6 @@ contract BlacklistToken is IERC20 {
 
     // Events
     event BlacklistTokenCreation(uint err);
-
-    // Private mappings
-    mapping (address => address[]) private blacklists;
-    mapping (address => uint) balances;
 
     constructor(address[] _bannedPairs) public {
         uint len = _bannedPairs.length;
@@ -43,8 +45,25 @@ contract BlacklistToken is IERC20 {
         emit BlacklistTokenCreation(SUCCESS);
     }
 
+    function distributeInitialSupply(address[] receivers) public {
+        require (!distributed);
+
+        uint len = receivers.length;
+        require(len == 10);
+
+        uint received = initialSupply / 10;
+        address current;
+
+        for (uint i = 0; i < len; ++i) {
+            current = receivers[i];
+            balances[current] = balances[current].add(received);
+        }
+
+        distributed = true;
+    }
+
     function totalSupply() external view returns (uint256) {
-        return supply;
+        return initialSupply;
     }
 
     function balanceOf(address _who) external view returns (uint) {
