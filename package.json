@@ -1,0 +1,19 @@
+{
+    "name": "blacklist-token",
+    "version": "0.0.0",
+    "description": "",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "openzeppelin-solidity": "^2.0.0",
+        "ganache-cli": "^6.2.3",
+        "truffle": "^4.1.14",
+        "web3": "^0.20.6"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cat-gj/blacklist-token.git"
+    },
+    "license": "MIT"
+}
