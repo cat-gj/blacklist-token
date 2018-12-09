@@ -1,8 +1,11 @@
 pragma solidity ^0.4.24;
 
+import {SafeMath} from "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./IERC20.sol";
 
 contract BlacklistToken is IERC20 {
+
+    using SafeMath for uint;
 
     // Private variables
     uint private supply = 1000000; // fixed supply for simplicity
