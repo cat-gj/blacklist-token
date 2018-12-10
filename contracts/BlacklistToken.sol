@@ -72,7 +72,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
 
     // TODO
     function allowance(address _owner, address _spender) external view returns (uint256) {
-        return DUMMY;
+        return allowances[_spender][_owner];
     }
 
     // TODO
