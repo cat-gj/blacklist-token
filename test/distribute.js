@@ -14,14 +14,14 @@ contract("BlacklistToken", (accounts) => {
         })
 
         it("Bad list length", async () => {
-            let expected = 0x220;
+            let expected = 220;
             let receipt = await blacklistToken.distributeForTests(badLengthList);
 
             utils.assertErrorCode(receipt, expected);
         })
 
         it("Success", async () => {
-            let expected = 0x0;
+            let expected = 0;
             let receipt = await blacklistToken.distributeForTests(goodList);
 
             utils.assertErrorCode(receipt, expected);
@@ -42,7 +42,7 @@ contract("BlacklistToken", (accounts) => {
         })
 
         it("Already distributed", async () => {
-            let expected = 0x210;
+            let expected = 210;
             let receipt = await blacklistToken.distributeForTests(goodList);
 
             utils.assertErrorCode(receipt, expected);

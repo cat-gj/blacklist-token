@@ -37,7 +37,7 @@ contract("BlacklistToken", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x100,
+            assert.equal(parseInt(errorCode, 16), 100,
             "Expected ERR_BAD_BANNED_PAIRS since list length was odd");
         })
     })
@@ -53,7 +53,7 @@ contract("BlacklistToken", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0, "Expected SUCCESS");
         })
 
         it ("Blacklists created", async () => {
@@ -92,7 +92,7 @@ contract("BlacklistToken", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0, "Expected SUCCESS");
         })
 
         it ("Blacklists created", async () => {
@@ -143,7 +143,7 @@ contract("BlacklistToken", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0, "Expected SUCCESS");
         })
 
         it("Blacklists created", async () => {
