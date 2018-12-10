@@ -14,7 +14,7 @@ module.exports = {
     },
 
     assertErrorCode: function (_receipt, _expectedErrorCode) {
-        let errorCode = receipt.logs[0].args.err;
+        let errorCode = _receipt.logs[0].args.err;
         assert.equal(errorCode.toNumber(), _expectedErrorCode, "Error code failed");
     },
 
