@@ -1,10 +1,10 @@
 const utils = require("./utils");
 const BlacklistTokenForTests = artifacts.require("BlacklistTokenForTests");
 
-contract("BlacklistToken constructor", (accounts) => {
+contract("BlacklistToken", (accounts) => {
     let blacklistToken;
 
-    describe("Empty list of banned pairs", () => {
+    describe("Constructor: empty list of banned pairs", () => {
         let emptyList = [];
 
         before(async () => {
@@ -22,12 +22,11 @@ contract("BlacklistToken constructor", (accounts) => {
             let expected = 1000;
             let actual = await blacklistToken.totalSupply();
 
-            assert.equal(expected, actual,
-            "Expected actual supply ${actual} to equal ${expected}");
+            assert.equal(expected, actual, "Total supply failed");
         })
     })
 
-    describe("Odd list length", () => {
+    describe("Constructor: odd list length", () => {
         let oddLengthList = ["0x1"];
 
         it("Creation fails", async () => {
@@ -40,7 +39,7 @@ contract("BlacklistToken constructor", (accounts) => {
         })
     })
 
-    describe("Single pair list", () => {
+    describe("Constructor: single pair list", () => {
         let singlePairList = ["0x1", "0x2"];
 
         it ("Contract creation successful", async () => {
@@ -70,7 +69,7 @@ contract("BlacklistToken constructor", (accounts) => {
         })
     })
 
-    describe("Several pairs", () => {
+    describe("Constructor: several pairs", () => {
         let pairs = [
             ["0x1", "0x3"],
             ["0x1", "0x5"],
@@ -85,8 +84,7 @@ contract("BlacklistToken constructor", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0,
-            "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
         })
 
         it ("Blacklists created", async () => {
@@ -125,7 +123,7 @@ contract("BlacklistToken constructor", (accounts) => {
         })
     })
 
-    describe("Repeated edges in list of pairs", () => {
+    describe("Constructor: repeated edges in list of pairs", () => {
         let pairs = [["0x1", "0x2"], ["0x2", "0x1"]];
         let flattenedPairs = utils.flattenPairs(pairs);
 
@@ -134,8 +132,7 @@ contract("BlacklistToken constructor", (accounts) => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0,
-            "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
         })
 
         it("Blacklists created", async () => {

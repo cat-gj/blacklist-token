@@ -1,7 +1,6 @@
 module.exports = {
     compareBlacklists: function (_expectedBL, _actualBL, _who) {
-        assert.equal(_expectedBL.length, _actualBL.length,
-        "Expected length ${_actualBL.length} of ${_who}'s blacklist to equal ${_expectedBL.length}");
+        assert.equal(_expectedBL.length, _actualBL.length, "Blacklist length failed");
 
         let expected;
         let actual;
@@ -10,9 +9,13 @@ module.exports = {
             expected = _expectedBL[i];
             actual = _actualBL[i];
 
-            assert.equal(expected, actual,
-            "Expected ${actual} in ${_who}'s blacklist to equal ${expected}");
+            assert.equal(expected, actual, "Blacklist value failed");
         }
+    },
+
+    assertErrorCode: function (_receipt, _expectedErrorCode) {
+        let errorCode = receipt.logs[0].args.err;
+        assert.equal(errorCode.toNumber(), _expectedErrorCode, "Error code failed");
     },
 
     padAddr: function(_addr) {
