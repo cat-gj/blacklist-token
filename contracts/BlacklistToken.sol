@@ -10,7 +10,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
 
     // Private variables
     uint private initialSupply = 1000; // fixed supply for simplicity
-    bool private distributed = false;  // for initial distribution
+    bool internal distributed = false; // for initial distribution, made internal for testing
 
     // Private mappings
     mapping (address => address[]) private blacklists;
@@ -19,6 +19,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
 
     // Events
     event BlacklistTokenCreation(uint err);
+    event InitialSupplyDistribution(uint err);
 
     constructor(address[] _bannedPairs) public {
         uint len = _bannedPairs.length;
