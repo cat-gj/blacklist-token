@@ -128,7 +128,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
     }
 
     function blacklisted(address _addr1, address _addr2) internal view returns (bool) {
-        return !contains(blacklists[_addr1], _addr2);
+        return contains(blacklists[_addr1], _addr2);
     }
 
     function blacklistTransitive(address _addr1, address _addr2) private {
