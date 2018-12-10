@@ -29,8 +29,11 @@ contract("BlacklistToken", (accounts) => {
     describe("Constructor: odd list length", () => {
         let oddLengthList = ["0x1"];
 
-        it("Creation fails", async () => {
+        before(async () => {
             blacklistToken = await BlacklistTokenForTests.new(oddLengthList);
+        })
+
+        it("Creation fails", async () => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
@@ -42,13 +45,15 @@ contract("BlacklistToken", (accounts) => {
     describe("Constructor: single pair list", () => {
         let singlePairList = ["0x1", "0x2"];
 
-        it ("Contract creation successful", async () => {
+        before(async () => {
             blacklistToken = await BlacklistTokenForTests.new(singlePairList);
+        })
+
+        it ("Contract creation successful", async () => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
-            assert.equal(parseInt(errorCode, 16), 0x0,
-            "Expected SUCCESS");
+            assert.equal(parseInt(errorCode, 16), 0x0, "Expected SUCCESS");
         })
 
         it ("Blacklists created", async () => {
@@ -79,8 +84,11 @@ contract("BlacklistToken", (accounts) => {
         ];
         let flattenedPairs = utils.flattenPairs(pairs);
 
-        it ("Contract creation successful", async () => {
+        before(async () => {
             blacklistToken = await BlacklistTokenForTests.new(flattenedPairs);
+        })
+
+        it ("Contract creation successful", async () => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 
@@ -127,8 +135,11 @@ contract("BlacklistToken", (accounts) => {
         let pairs = [["0x1", "0x2"], ["0x2", "0x1"]];
         let flattenedPairs = utils.flattenPairs(pairs);
 
-        it ("Contract creation successful", async () => {
+        before(async () => {
             blacklistToken = await BlacklistTokenForTests.new(flattenedPairs);
+        })
+
+        it ("Contract creation successful", async () => {
             let receipt = await web3.eth.getTransactionReceipt(blacklistToken.transactionHash);
             let errorCode = receipt.logs[0].data;
 

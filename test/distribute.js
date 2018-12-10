@@ -37,7 +37,7 @@ contract("BlacklistToken", (accounts) => {
 
             for (account in expectedBalances) {
                 actualBalance = await blacklistToken.balanceOf.call(account);
-                assert.equal(actualBalance.toNumber(), expectedBalances[account], "");
+                assert.equal(actualBalance.toNumber(), expectedBalances[account], "Wrong balance");
             }
         })
 
