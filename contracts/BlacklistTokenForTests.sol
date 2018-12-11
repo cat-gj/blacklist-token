@@ -23,17 +23,4 @@ contract BlacklistTokenForTests is BlacklistToken {
         emit InitialSupplyDistribution(SUCCESS);
         return true;
     }
-
-    function approveForTests(address _spender, uint256 _value) external returns (bool success) {
-        if (blacklisted(msg.sender, _spender)) {
-            emit ApproveCalled(ERR_BLACKLISTED);
-            return false;
-        }
-
-        success = approve(_spender, _value);
-
-        if (success) {
-            emit ApproveCalled(SUCCESS);
-        }
-    }
 }

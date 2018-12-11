@@ -15,7 +15,8 @@ contract BlacklistToken is IERC20, ErrorCodes {
     // Private mappings
     mapping (address => address[]) private blacklists;
     mapping (address => uint) private balances;
-    mapping (address => mapping (address => uint)) allowances;
+    mapping (address => mapping (address => uint)) private allowances;
+    mapping (address => mapping (address => bool)) internal banned;
 
     // Events for debugging
     event BlacklistTokenCreation(uint err);
@@ -82,13 +83,10 @@ contract BlacklistToken is IERC20, ErrorCodes {
 
     // TODO
     function approve(address _spender, uint256 _value) public returns (bool) {
-        require(!blacklisted(msg.sender, _spender));
+        require (_spender != address(0));
 
-        blacklistTransitive(msg.sender, _spender);
-
-        balances[msg.sender] = balances[msg.sender].sub(_value);
-        allowances[_spender][msg.sender] = allowances[_spender][msg.sender].add(_value);
-
+        allowances[_spender][msg.sender] = _value;
+        emit Approval(msg.sender, _spender, _value);
         return true;
     }
 
@@ -110,8 +108,9 @@ contract BlacklistToken is IERC20, ErrorCodes {
     function addToBlacklist(address _blacklistHolder, address _toAdd) private {
         address[] storage blacklist = blacklists[_blacklistHolder];
 
-        if (!contains(blacklist, _toAdd)) {
+        if (!banned[_blacklistHolder][_toAdd]) {
             blacklist.push(_toAdd);
+            banned[_blacklistHolder][_toAdd] = true;
         }
     }
 
@@ -125,10 +124,6 @@ contract BlacklistToken is IERC20, ErrorCodes {
         }
 
         return false;
-    }
-
-    function blacklisted(address _addr1, address _addr2) internal view returns (bool) {
-        return contains(blacklists[_addr1], _addr2);
     }
 
     function blacklistTransitive(address _addr1, address _addr2) private {
