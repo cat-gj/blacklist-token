@@ -1,6 +1,6 @@
 module.exports = {
-    compareBlacklists: function (_expectedBL, _actualBL, _who) {
-        assert.equal(_expectedBL.length, _actualBL.length, "Blacklist length failed");
+    compareBlacklists: function (_actualBL, _expectedBL, _who) {
+        assert.equal(_actualBL.length, _expectedBL.length, "Blacklist length failed");
 
         let expected;
         let actual;
@@ -9,7 +9,7 @@ module.exports = {
             expected = _expectedBL[i];
             actual = _actualBL[i];
 
-            assert.equal(expected, actual, "Blacklist value failed");
+            assert.equal(actual, expected, "Blacklist value failed");
         }
     },
 
