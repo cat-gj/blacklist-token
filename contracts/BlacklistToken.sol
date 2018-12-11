@@ -21,7 +21,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
     // Events for debugging
     event BlacklistTokenCreation(uint err);
     event InitialSupplyDistribution(uint err);
-    event ApproveCalled(uint err);
+    event TransferCalled(uint err);
 
     constructor(address[] _bannedPairs) public {
         uint len = _bannedPairs.length;
@@ -76,8 +76,21 @@ contract BlacklistToken is IERC20, ErrorCodes {
         return allowances[_spender][_owner];
     }
 
-    // TODO
-    function transfer(address _to, uint256 _value) external returns (bool) {
+    // Would be external in production, made public for mock class
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(!banned[msg.sender][_to]);
+
+        // msg.sender's blacklisted addresses can't send tokens to _to
+        // and vice versa
+        blacklistNeighbours(msg.sender, _to);
+
+        // _to's blacklisted addresses can't send tokens to msg.sender
+        // and vice versa
+        blacklistNeighbours(_to, msg.sender);
+
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+
         return true;
     }
 
@@ -131,14 +144,13 @@ contract BlacklistToken is IERC20, ErrorCodes {
         blacklistNeighbours(_addr2, _addr1);
     }
 
-    // TODO: optimise
-    function blacklistNeighbours(address _blacklistHolder, address _toAdd) {
-        address[] memory neighbours = blacklists[_blacklistHolder];
-        uint len = neighbours.length;
+    // Helper function for making prohibition transitive
+    function blacklistNeighbours(address _neighbourHaver, address _other) {
+        address[] memory neighbours = blacklists[_neighbourHaver];
 
-        for (uint i = 0; i < len; ++i) {
-            addToBlacklist(_blacklistHolder, neighbours[i]);
-            addToBlacklist(neighbours[i], _blacklistHolder);
+        for (uint i = 0; i < neighbours.length; ++i) {
+            addToBlacklist(neighbours[i], _other);
+            addToBlacklist(_other, neighbours[i]);
         }
     }
 }

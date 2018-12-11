@@ -23,4 +23,17 @@ contract BlacklistTokenForTests is BlacklistToken {
         emit InitialSupplyDistribution(SUCCESS);
         return true;
     }
+
+    function transferForTests(address _to, uint256 _value) external returns (bool success) {
+        if (banned[msg.sender][_to]) {
+            emit TransferCalled(ERR_BLACKLISTED);
+            return false;
+        }
+
+        success = transfer(_to, _value);
+
+        if (success) {
+            emit TransferCalled(SUCCESS);
+        }
+    }
 }
