@@ -63,17 +63,21 @@ contract("BlacklistToken", (accounts) => {
         })
 
         it("Prohibition is transitive", async () => {
-            let blacklist2Expected = [address1, address3];
-            let blacklist3Expected = [address4, address2];
-            let blacklist4Expected = [address3, address1];
+            let addresses = [address1, address2, address3, address4];
+            let expectedBlacklists = [
+                [address2, address4],
+                [address1, address3],
+                [address4, address2],
+                [address3, address1]
+            ];
 
-            let blacklist2Actual = await blacklistToken.getBlacklist(address2);
-            let blacklist3Actual = await blacklistToken.getBlacklist(address3);
-            let blacklist4Actual = await blacklistToken.getBlacklist(address4);
+            for (let i = 0; i < expectedBlacklists.length; ++i) {
+                let address = addresses[i];
+                let expectedBlacklist = expectedBlacklists[i];
+                let actualBlacklist = await blacklistToken.getBlacklist(address);
 
-            utils.compareBlacklists(blacklist2Actual, blacklist2Expected, "Wrong blacklist for address2");
-            utils.compareBlacklists(blacklist3Actual, blacklist3Expected, "Wrong blacklist for address3");
-            utils.compareBlacklists(blacklist4Actual, blacklist4Expected, "Wrong blacklist for address4");
+                utils.compareBlacklists(actualBlacklist, expectedBlacklist, address);
+            }
         })
     })
 })
