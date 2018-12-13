@@ -38,9 +38,7 @@ contract("BlacklistToken", (accounts) => {
 
         it("Successful transfer", async () => {
             let receipt = await blacklistToken.transferForTests(address3, 100, {from: address1});
-            let expectedErrorCode = 0;
-
-            utils.assertErrorCode(receipt, expectedErrorCode);
+            assert.equal(receipt.logs[0].event, "Transfer", "Should fire Transfer event");
         })
 
         it("Correct balances", async () => {
