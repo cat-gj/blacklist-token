@@ -139,7 +139,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
     }
 
     // Helper function for making prohibition transitive
-    function blacklistNeighbours(address _neighbourHaver, address _other) {
+    function blacklistNeighbours(address _neighbourHaver, address _other) private {
         address[] memory neighbours = blacklists[_neighbourHaver];
 
         for (uint i = 0; i < neighbours.length; ++i) {
