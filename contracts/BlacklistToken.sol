@@ -71,7 +71,6 @@ contract BlacklistToken is IERC20, ErrorCodes {
         return balances[_who];
     }
 
-    // TODO
     function allowance(address _owner, address _spender) external view returns (uint256) {
         return allowances[_spender][_owner];
     }
@@ -91,10 +90,10 @@ contract BlacklistToken is IERC20, ErrorCodes {
         balances[msg.sender] = balances[msg.sender].sub(_value);
         balances[_to] = balances[_to].add(_value);
 
+        emit Transfer(msg.sender, _to, _value);
         return true;
     }
 
-    // TODO
     function approve(address _spender, uint256 _value) public returns (bool) {
         require (_spender != address(0));
 
@@ -137,11 +136,6 @@ contract BlacklistToken is IERC20, ErrorCodes {
         }
 
         return false;
-    }
-
-    function blacklistTransitive(address _addr1, address _addr2) private {
-        blacklistNeighbours(_addr1, _addr2);
-        blacklistNeighbours(_addr2, _addr1);
     }
 
     // Helper function for making prohibition transitive
