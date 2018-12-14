@@ -81,6 +81,8 @@ contract BlacklistToken is IERC20, ErrorCodes {
         require(!banned[msg.sender][_to]);
 
         transferHelper(msg.sender, _to, _value);
+        emit Transfer(msg.sender, _to, _value);
+
         return true;
     }
 
@@ -93,10 +95,14 @@ contract BlacklistToken is IERC20, ErrorCodes {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool) {
-        // The first line will `throw` if _to isn't allowed to transfer this much
+        require(!banned[msg.sender][_to]);
+
+        // This line will `throw` if _to isn't allowed to transfer this much
         allowances[_to][_from] = allowances[_to][_from].sub(_value);
 
         transferHelper(_from, _to, _value);
+        emit Transfer(_from, _to, _value);
+
         return true;
     }
 
@@ -141,7 +147,5 @@ contract BlacklistToken is IERC20, ErrorCodes {
 
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
-
-        emit Transfer(_from, _to, _value);
     }
 }
