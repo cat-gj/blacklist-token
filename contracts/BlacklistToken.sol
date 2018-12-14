@@ -16,12 +16,13 @@ contract BlacklistToken is IERC20, ErrorCodes {
     mapping (address => address[]) private blacklists;
     mapping (address => uint) private balances;
     mapping (address => mapping (address => uint)) private allowances;
-    mapping (address => mapping (address => bool)) internal banned;
+    mapping (address => mapping (address => bool)) internal banned; // made internal for testing
 
     // Events for debugging
     event BlacklistTokenCreation(uint err);
     event InitialSupplyDistribution(uint err);
     event TransferCalled(uint err);
+
 
     constructor(address[] _bannedPairs) public {
         uint len = _bannedPairs.length;
@@ -79,18 +80,7 @@ contract BlacklistToken is IERC20, ErrorCodes {
     function transfer(address _to, uint256 _value) public returns (bool) {
         require(!banned[msg.sender][_to]);
 
-        // msg.sender's blacklisted addresses can't send tokens to _to
-        // and vice versa
-        blacklistNeighbours(msg.sender, _to);
-
-        // _to's blacklisted addresses can't send tokens to msg.sender
-        // and vice versa
-        blacklistNeighbours(_to, msg.sender);
-
-        balances[msg.sender] = balances[msg.sender].sub(_value);
-        balances[_to] = balances[_to].add(_value);
-
-        emit Transfer(msg.sender, _to, _value);
+        transferHelper(msg.sender, _to, _value);
         return true;
     }
 
@@ -102,8 +92,11 @@ contract BlacklistToken is IERC20, ErrorCodes {
         return true;
     }
 
-    // TODO
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool) {
+        // The first line will `throw` if _to isn't allowed to transfer this much
+        allowances[_to][_from] = allowances[_to][_from].sub(_value);
+
+        transferHelper(_from, _to, _value);
         return true;
     }
 
@@ -126,18 +119,6 @@ contract BlacklistToken is IERC20, ErrorCodes {
         }
     }
 
-    function contains(address[] _blacklist, address _element) private pure returns (bool) {
-        uint len = _blacklist.length;
-
-        for (uint i = 0; i < len; ++i) {
-            if (_blacklist[i] == _element) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     // Helper function for making prohibition transitive
     function blacklistNeighbours(address _neighbourHaver, address _other) private {
         address[] memory neighbours = blacklists[_neighbourHaver];
@@ -146,5 +127,21 @@ contract BlacklistToken is IERC20, ErrorCodes {
             addToBlacklist(neighbours[i], _other);
             addToBlacklist(_other, neighbours[i]);
         }
+    }
+
+    // Moves _value tokens from _from's account to _to's account
+    function transferHelper(address _from, address _to, uint _value) private {
+        // _from's blacklisted addresses can't send tokens to _to
+        // and vice versa
+        blacklistNeighbours(_from, _to);
+
+        // _to's blacklisted addresses can't send tokens to _from
+        // and vice versa
+        blacklistNeighbours(_to, _from);
+
+        balances[_from] = balances[_from].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+
+        emit Transfer(_from, _to, _value);
     }
 }
